@@ -87,31 +87,36 @@ This will create a new project similar to this structure:
 Open the hardhat-config.js file and configure it as follows:
 
 ```javascript
+// This file exports configuration options for Truffle, a development framework for Ethereum.
 module.exports = {
+  // Define networks to use in Truffle. Here, we define "development" and "celo" networks.
   networks: {
+    // "development" network is used when running Truffle locally
     development: {
-      host: "127.0.0.1",
-      port: 8545,
-      network_id: "*",
+      host: "127.0.0.1", // Localhost IP
+      port: 8545, // Port number for localhost
+      network_id: "*", // Matches any network ID
     },
+    // "celo" network is used to deploy smart contracts to Celo blockchain
     celo: {
-      provider: () =>
-        new HDWalletProvider(privateKey, "https://www.infura.io/"),
-      network_id: 44787,
-      gas: 5000000,
-      gasPrice: 20000000000, // 20 gwei
+      provider: () => new HDWalletProvider(privateKey, "https://www.infura.io/"), // Provider to connect to Celo network using a private key
+      network_id: 44787, // Celo network ID
+      gas: 5000000, // Gas limit for transactions
+      gasPrice: 20000000000, // 20 gwei, Gas price in wei
     },
   },
+  // Define Solidity compiler options. Here, we use version 0.8.4 of the Solidity compiler with optimization enabled.
   compilers: {
     solc: {
-      version: "0.8.4",
+      version: "0.8.4", // Solidity compiler version
       optimizer: {
-        enabled: true,
-        runs: 200,
+        enabled: true, // Enable the optimizer
+        runs: 200, // Optimization runs
       },
     },
   },
 };
+
 ```
 
 "Private Key" should be replaced with your Celo testnet private key. This file defines two networks: celo, which connects to the Celo testnet via Infura and development, which connects to a local hardhat instance.
@@ -136,66 +141,83 @@ Create a new file called Microlending.sol in the contracts directory and add the
 
 ```solidity
 // SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.4;
 
 contract Microlending {
-  struct Loan {
-    address borrower;
-    uint256 amount;
-    uint256 interestRate;
-    uint256 duration;
-    uint256 endTime;
-    bool repaid;
-  }
+    struct Loan {
+        address borrower;
+        uint256 amount;
+        uint256 interestRate;
+        uint256 duration;
+        uint256 endTime;
+        bool repaid;
+    }
 
-  Loan[] public loans;
-  mapping(address => uint256) public balances;
+    Loan[] public loans;
+    mapping(address => uint256) public balances;
 
-  event LoanRequested(address indexed borrower, uint256 amount, uint256 interestRate, uint256 duration, uint256 endTime);
-  event LoanRepaid(uint256 loanId, uint256 amount);
+    event LoanRequested(address indexed borrower, uint256 amount, uint256 interestRate, uint256 duration, uint256 endTime);
+    event LoanRepaid(uint256 loanId, uint256 amount);
 
-  function requestLoan(uint256 amount, uint256 interestRate, uint256 duration) external {
-    require(amount > 0, "Amount must be greater than zero");
-    require(interestRate > 0, "Interest rate must be greater than zero");
-    require(duration > 0, "Duration must be greater than zero");
+    /**
+     * @dev Request a loan.
+     * @param amount The amount of the loan.
+     * @param interestRate The interest rate for the loan.
+     * @param duration The duration of the loan in seconds.
+     */
+    function requestLoan(uint256 amount, uint256 interestRate, uint256 duration) external {
+        require(amount > 0, "Amount must be greater than zero");
+        require(interestRate > 0, "Interest rate must be greater than zero");
+        require(duration > 0, "Duration must be greater than zero");
 
-    uint256 endTime = block.timestamp + duration;
+        uint256 endTime = block.timestamp + duration;
 
-    loans.push(Loan(msg.sender, amount, interestRate, duration, endTime, false));
+        loans.push(Loan(msg.sender, amount, interestRate, duration, endTime, false));
 
-    emit LoanRequested(msg.sender, amount, interestRate, duration, endTime);
-  }
+        emit LoanRequested(msg.sender, amount, interestRate, duration, endTime);
+    }
 
-  function repayLoan(uint256 loanId) external {
-    Loan storage loan = loans[loanId];
+    /**
+     * @dev Repay a loan.
+     * @param loanId The ID of the loan to be repaid.
+     */
+    function repayLoan(uint256 loanId) external {
+        Loan storage loan = loans[loanId];
 
-    require(msg.sender == loan.borrower, "Only borrower can repay the loan");
-    require(!loan.repaid, "Loan already repaid");
+        require(msg.sender == loan.borrower, "Only borrower can repay the loan");
+        require(!loan.repaid, "Loan already repaid");
 
-    uint256 amount = loan.amount + (loan.amount * loan.interestRate / 100);
-    balances[msg.sender] -= amount;
-    loan.repaid = true;
+        uint256 amount = loan.amount + (loan.amount * loan.interestRate / 100);
+        balances[msg.sender] -= amount;
+        loan.repaid = true;
 
-    emit LoanRepaid(loanId, amount);
-  }
+        emit LoanRepaid(loanId, amount);
+    }
 
-  function deposit() external payable {
-    require(msg.value > 0, "Deposit amount must be greater than zero");
+    /**
+     * @dev Deposit funds into the lending pool.
+     */
+    function deposit() external payable {
+        require(msg.value > 0, "Deposit amount must be greater than zero");
 
-    balances[msg.sender] += msg.value;
-  }
+        balances[msg.sender] += msg.value;
+    }
 
-  function withdraw(uint256 amount) external {
-    require(amount > 0, "Withdraw amount must be greater than zero");
-    require(amount <= balances[msg.sender], "Insufficient balance");
+    /**
+     * @dev Withdraw funds from the lending pool.
+     * @param amount The amount of funds to withdraw.
+     */
+    function withdrawpattern(uint256 amount) external {
+        require(amount > 0, "Withdraw amount must be greater than zero");
+        require(amount <= balances[msg.sender], "Insufficient balance");
 
-    balances[msg.sender] -= amount;
+        balances[msg.sender] -= amount;
 
-    (bool success, ) = msg.sender.call{value: amount}("");
-    require(success, "Withdrawal failed");
-  }
+        (bool success, ) = msg.sender.call{value: amount}("");
+        require(success, "Withdrawal failed");
+    }
 }
+
 ```
 
 Let's Breakdown the contract line by line:
@@ -282,7 +304,7 @@ Borrowers can use this function to repay their loans. The `Loan` struct associat
 Users can utilize this function to deposit cUSD into their account balance. It requires that the deposited amount be larger than zero, adds it to the sender's balance and returns nothing.
 
 ```solidity
- function withdraw(uint256 amount) external {
+ function withdrawpattern(uint256 amount) external {
     require(amount > 0, "Withdraw amount must be greater than zero");
     require(amount <= balances[msg.sender], "Insufficient balance");
 
@@ -293,7 +315,7 @@ Users can utilize this function to deposit cUSD into their account balance. It r
 }
 ```
 
-The `withdraw` function allows a user to withdraw funds from their balance in the microlending platform. The function takes a `uint256` parameter `amount` which represents the amount of funds the user wishes to withdraw.
+The `withdrawpattern` function allows a user to withdraw funds from their balance in the microlending platform. The function takes a `uint256` parameter `amount` which represents the amount of funds the user wishes to withdraw.
 
 The first line of the function contains a `require` statement that checks if the amount is greater than 0. If the `amount` is not greater than 0, the function will revert with the error message "Withdraw amount must be greater than zero".
 
@@ -350,10 +372,11 @@ We'll add a new script called `interact.js` to the `scripts` directory to commun
 
 ```javascript
 const hre = require("hardhat");
+const ethers = require("ethers");
 
 async function main() {
   const Microlending = await hre.ethers.getContractFactory("Microlending");
-  const microlending = await Microlending.attach("CONTRACT_ADDRESS");
+  const microlending = await Microlending.attach("ACTUAL_CONTRACT_ADDRESS");
 
   // Deposit cUSD into the smart contract
   const depositAmount = ethers.utils.parseUnits("100", "18");
@@ -371,7 +394,7 @@ async function main() {
   const repayAmount = loan.amount.add(
     loan.amount.mul(loan.interestRate).div(100)
   );
-  await microlending.repayLoan(loanId);
+  await microlending.repayLoan(loanId, { value: repayAmount });
 
   // Withdraw cUSD from the smart contract
   const withdrawAmount = ethers.utils.parseUnits("50", "18");
@@ -379,6 +402,7 @@ async function main() {
 }
 
 main();
+
 ```
 
 Replace `CONTRACT_ADDRESS` with the address of the deployed Smart Contract.
@@ -583,8 +607,8 @@ The next steps include developing more sophisticated risk assessment and credit 
 
 Therefore, developing a Celo-based microlending platform can be an excellent strategy to promote financial inclusion and provide credit to vulnerable sections. We can establish a transparent, safe and efficient lending platform that benefits both lenders and borrowers by leveraging the power of Smart Contracts and the Celo blockchain.
 
-In this tutorial, we  have also covered the fundamentals of developing a microlending platform on Celo in this lesson, including setting up a development environment, generating a Smart Contract and testing our code. We also looked at the many functionalities of a microlending platform like seeking loans, repaying loans, depositing cash and withdrawing funds.
+In this tutorial, we have also covered the fundamentals of developing a microlending platform on Celo in this lesson, including setting up a development environment, generating a Smart Contract and testing our code. We also looked at the many functionalities of a microlending platform like seeking loans, repaying loans, depositing cash and withdrawing funds.
 
-You should now have a strong foundation for creating your own Celo-based microlending platform after following the instructions provided in this tutorial. Surely there's always more to learn and do better, but this tutorial ought to provide you a good place to start as you continue on your development path.
+You should now have a strong foundation to create your own Celo-based microlending platform after following the instructions provided in this tutorial. Surely there's always more to learn and do better, but this tutorial ought to provide you a good place to start as you continue on your development path.
 
-When developing on any blockchain, always keep in mind to put security and best practices first and don't be afraid to ask the Celo community for help and advice along the way. Wishing you well as you create your microlending platform!
+When you are developing on any blockchain always keep in mind to put security and best practices first and don't be afraid to ask the Celo community for help and advice along the way. Wishing you all the very best in creating your own microlending platform!
