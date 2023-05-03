@@ -1,11 +1,11 @@
-# A Developer's guide on building a Celo-based microlending platform for financial inclusion
+# A Developer's guide on building a Celo-based Microlending Platform for Financial Inclusion:
 
-## Table Of Contents
+## Table Of Contents:
 
-- [A Developer's guide on building a Celo-based microlending platform for financial inclusion](#a-developers-guide-on-building-a-celo-based-microlending-platform-for-financial-inclusion)
+- [A Developer's guide on building a Celo-based Microlending Platform for Financial Inclusion](#a-developers-guide-on-building-a-celo-based-microlending-platform-for-financial-inclusion)
   - [Table Of Contents](#table-of-contents)
   - [Introduction](#introduction)
-  - [Prerequisites](#prerequisites)
+  - [Pre-requisites](#pre-requisites)
   - [Setting up the Development Environment](#setting-up-the-development-environment)
     - [Step 1: Create a new project](#step-1-create-a-new-project)
     - [Step 2: Install Hardhat](#step-2-install-hardhat)
@@ -20,32 +20,32 @@
     - [Step 5: Testing](#step-5-testing)
   - [Conclusion](#conclusion)
 
-## Introduction
+## Introduction:
 
-Microlending has been acknowledged as an important strategy for poverty alleviation and financial inclusion. It gives low-income people access to loans that can help them start enterprises, pay for education or healthcare, and satisfy other basic requirements. Traditional financial institutions, on the other hand, have frequently disregarded low-income persons due to a lack of collateral and credit history. With the advent of blockchain technology, it has become possible to create microlending platforms that use smart contracts to eliminate the need for middlemen, cut costs, and expand loan access.
+Microlending has been acknowledged as an important strategy for poverty alleviation and financial inclusion. It gives low-income people access to loans that can help them start enterprises, pay for education or healthcare and satisfy other basic requirements.  On the other hand, traditional financial institutions have frequently disregarded low-income persons due to a lack of collateral and credit history. With the advent of blockchain technology, it has now become possible to create microlending platforms that use Smart Contracts to eliminate the need for middlemen, cut costs and expand loan access.
 
-**Celo** is a blockchain platform that aims to increase financial inclusion by allowing people to transfer, receive, and store digital assets on their mobile devices. It offers a stablecoin called Celo Dollar (cUSD), which is pegged to the US dollar and may be used for microlending. In this tutorial, we will use smart contracts to create a Celo-based microlending platform.
+**Celo** is a blockchain platform that aims to increase financial inclusion by allowing people to transfer, receive and store digital assets on their mobile devices. It offers a stablecoin called Celo Dollar (cUSD) which is pegged to the US dollar and may be used for microlending. In this tutorial, we will use Smart Contracts to create a Celo-based microlending platform.
 
-## Prerequisites
+## Pre-requisites:
 
 To follow this tutorial, you will need the following:
 
-- A basic understanding of blockchain technology and smart contracts
-- Familiarity with Solidity programming language
-- An understanding of web3.js library
-- Node.js & Npm installed on your machine
-- A Celo wallet and some testnet cUSD
+- Understanding of blockchain technology and Smart Contracts.
+- Familiarity with Solidity programming language.
+- Understanding of web3.js library.
+- Install [Node.js](https://nodejs.org/en/download) & [Npm](https://www.npmjs.com/package/download). 
+- Install [Celo Extension wallet](https://chrome.google.com/webstore/detail/celoextensionwallet/kkilomkmpmkbdnfelcpgckmpcaemjcdh?hl=en) and some testnet cUSD.
 
-## Setting up the Development Environment
+## Setting up the Development Environment:
 
 We will use the following tools and services to develop our microlending platform:
 
-- Hardhat: A development framework that provides tools for compiling, testing, and deploying smart contracts.
-- Infura: A service that provides access to Ethereum networks for deploying smart contracts.
+- [Hardhat](https://hardhat.org/): A development framework that provides tools for compiling, testing and deploying Smart Contracts.
+- [Infura](https://www.infura.io/?utm_source=google&utm_medium=paidsearch&utm_campaign=Infura-Search-APAC-en-Brand-PHR&utm_term=infura&gad=1&gclid=CjwKCAjwjMiiBhA4EiwAZe6jQy498McLFxWLFa23V2XBXKrYo7KmCfFdGLfSz_kSt_iz8Lj84h1zHBoCNlwQAvD_BwE): A service that provides access to Ethereum networks for deploying Smart Contracts.
 
-To begin, take these steps:
+To begin follow the below steps:
 
-### Step 1: Create a new project
+### Step 1: Create a new project-
 
 Create a new directory for your project:
 
@@ -59,7 +59,7 @@ Navigate to the project directory you just created:
     cd microlending-platform
 ```
 
-### Step 2: Install Hardhat
+### Step 2: Install Hardhat-
 
 Open your terminal and run the following commands to install Hardhat:
 
@@ -67,7 +67,7 @@ Open your terminal and run the following commands to install Hardhat:
     npm install hardhat --save-dev
 ```
 
-Initialize a new Hardhat Project
+Initialize a new Hardhat Project:
 
 ```bash
     npx hardhat init
@@ -82,7 +82,7 @@ This will create a new project similar to this structure:
     └── hardhat-config.js
 ```
 
-### Step 3: Configure Hardhat
+### Step 3: Configure Hardhat-
 
 Open the hardhat-config.js file and configure it as follows:
 
@@ -114,28 +114,28 @@ module.exports = {
 };
 ```
 
-PrivateKey should be replaced with your Celo testnet private key. This file defines two networks: celo, which connects to the Celo testnet via Infura, and development, which connects to a local hardhat instance.
+"Private Key" should be replaced with your Celo testnet private key. This file defines two networks: celo, which connects to the Celo testnet via Infura and development, which connects to a local hardhat instance.
 
-### Step 4: Create a Celo Wallet
+### Step 4: Create a Celo Wallet-
 
-A Celo wallet is required to engage with the Celo network. You can make advantage of the wallet extension provided by Celo which can be downloaded and installed on your local machine **[here](https://celowallet.app/setup)**
+A Celo wallet is required to engage with the Celo network. You can take advantage of the wallet extension provided by Celo which can be downloaded and installed on your local machine **[here](https://celowallet.app/setup)**
 
-### Step 5: Fund Your Wallet with Testnet cUSD
+### Step 5: Fund Your Wallet with Testnet cUSD-
 
 We need some testnet cUSD to test our microlending platform. You can request testnet cUSD from the Celo Faucet by visiting this **[link](https://celo.org/developers/faucet)**
 
 After submitting your wallet address, you should receive testnet cUSD within a few minutes. You can check your balance in your celo wallet.
 
-## Creating the Microlending Smart Contract
+## Creating the Microlending Smart Contract:
 
-In this section, we'll build a smart contract that lets lenders deposit cUSD and borrowers seek loans. The smart contract will handle loan repayment, including interest, and will send payments to lenders.
+In this section, we'll build a Smart Contract that lets lenders deposit cUSD and borrowers seek loans. The Smart Contract will handle loan repayment, interest and will send payments to lenders.
 
-### Step 1: Create a new solidity file
+### Step 1: Create a new solidity file-
 
-Create a new file called Microlending.sol in the contracts directory and add the following code
+Create a new file called Microlending.sol in the contracts directory and add the following code:
 
 ```solidity
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.4;
 
@@ -204,7 +204,7 @@ Let's Breakdown the contract line by line:
     contract Microlending {
 ```
 
-This declares the start of the contract.
+This declares the start of the contract:
 
 ```solidity
   struct Loan {
@@ -217,26 +217,26 @@ This declares the start of the contract.
   }
 ```
 
-This defines a new data structure named "Loan", which represents a loan that has been requested by a borrower.
+This defines a new data structure named `Loan` which represents loan that has been requested by a borrower:
 
 ```
     Loan[] public loans;
 ```
 
-This declares a public collection of loans requested by borrowers. By making this array public, other contracts and external applications will be able to read the data stored in it.
+This declares a public collection of loans requested by borrowers. By making this array public, other contracts and external applications will be able to read the data stored in it:
 
 ```solidity
      mapping(address => uint256) public balances;
 ```
 
-This publishes a public mapping that links each address's balance to the amount of cUSD (a stablecoin used on the Celo network) they currently have.
+This publishes a public mapping that links each address's balance to the amount of cUSD (a stablecoin used on the Celo network) they currently have:
 
 ```solidity
     event LoanRequested(address indexed borrower, uint256 amount, uint256 interestRate, uint256 duration, uint256 endTime);
     event LoanRepaid(uint256 loanId, uint256 amount);
 ```
 
-These are two events that the contract emits when a loan is requested or repaid. Events are a way for the contract to communicate with external applications, and can be subscribed to by interested parties.
+These are two events that the contract emits when a loan is requested or repaid. Events are a way for the contract to communicate with external applications and can be subscribed to by interested parties:
 
 ```solidity
   function requestLoan(uint256 amount, uint256 interestRate, uint256 duration) external {
@@ -252,7 +252,7 @@ These are two events that the contract emits when a loan is requested or repaid.
   }
 ```
 
-Borrowers can use this feature to request a loan. It takes the loan amount, interest rate, and duration as inputs and produces a new Loan struct with this information. The function then adds the new loan to the loans array and fires the LoanRequested event.
+Borrowers can use this feature to request a loan. It takes the loan amount, interest rate and duration as inputs and produces a new Loan struct with this information. The function then adds the new loan to the loans array and fires the `LoanRequested` event:
 
 ```solidity
   function repayLoan(uint256 loanId) external {
@@ -269,7 +269,7 @@ Borrowers can use this feature to request a loan. It takes the loan amount, inte
   }
 ```
 
-Borrowers can use this function to repay their loans. The Loan struct associated with the supplied loanId is first retrieved from the loans array. The function then validates that the sender is the borrower and that the loan has not been repaid. If these conditions are met, the function computes the total amount to be repaid (loan amount + interest), deducts it from the borrower's balance, marks the loan as repaid, and emits a LoanRepaid event.
+Borrowers can use this function to repay their loans. The `Loan` struct associated with the supplied `loanId` is first retrieved from the loans array. The function then validates that the sender is the borrower and that the loan has not been repaid. If these conditions are met then the function computes the total amount to be repaid (loan amount + interest), deducts it from the borrower's balance, marks the loan as repaid and emits a LoanRepaid event.
 
 ```solidity
   function deposit() external payable {
@@ -279,7 +279,7 @@ Borrowers can use this function to repay their loans. The Loan struct associated
   }
 ```
 
-Users can utilize this function to deposit cUSD into their account balance. It requires that the deposited amount be larger than zero, adds it to the sender's balance, and returns nothing.
+Users can utilize this function to deposit cUSD into their account balance. It requires that the deposited amount be larger than zero, adds it to the sender's balance and returns nothing.
 
 ```solidity
  function withdraw(uint256 amount) external {
@@ -307,17 +307,17 @@ The fifth line of the function contains a `require` statement that checks if the
 
 In general, the `withdraw` function enables users to take money from their microlending platform balance as long as they have enough money to do so.
 
-### Step 2: Compile the Smart Contract
+### Step 2: Compile the Smart Contract-
 
-To compile the smart contract, run the following command in your terminal:
+To compile the Smart Contract, run the following command in your terminal:
 
 ```bash
     npx hardhat compile
 ```
 
-This command will generate the required artifacts in the `artifacts` directory and compile the smart contract.
+This command will generate the required artifacts in the `artifacts` directory and compile the Smart Contract.
 
-### Step 3: Deploy the Smart Contract
+### Step 3: Deploy the Smart Contract-
 
 We will add a brand-new deployment script called `deploy.js` to the `scripts` directory in order to deploy the smart contract. Code the script using the following:
 
@@ -336,15 +336,15 @@ async function main() {
 main();
 ```
 
-This script uses the Hardhat framework to deploy the `Microlending` smart contract to the Celo testnet. To deploy the smart contract, run the following command in your terminal:
+This script uses the Hardhat framework to deploy the `Microlending` Smart Contract to the Celo testnet. To deploy the Smart Contract, run the following command in your terminal:
 
 ```bash
     npx hardhat run scripts/deploy.js --network alfajores
 ```
 
-After the deployment is complete, you should see the address of the deployed smart contract in your terminal.
+After the deployment is complete, you should see the address of the deployed Smart Contract in your terminal.
 
-### Step 4: Interact with the Smart Contract
+### Step 4: Interact with the Smart Contract-
 
 We'll add a new script called `interact.js` to the `scripts` directory to communicate with the smart contract. Code the script using the following:
 
@@ -381,9 +381,9 @@ async function main() {
 main();
 ```
 
-Replace `CONTRACT_ADDRESS` with the address of the deployed smart contract.
+Replace `CONTRACT_ADDRESS` with the address of the deployed Smart Contract.
 
-This script invests $100 into the smart contract, requests a loan of $10 with a 10% interest rate for one day, repays the loan, and withdraws $50 from the smart contract.
+This script invests $100 into the Smart Contract, requests a loan of $10 with a 10% interest rate for one day, repays the loan and withdraws $50 from the smart contract.
 
 To run the script, run the following command in your terminal:
 
@@ -393,9 +393,9 @@ npx hardhat run scripts/interact.js --network alfajores
 
 After the script runs successfully, you should see the transactions in your Celo wallet.
 
-### Step 5: Testing
+### Step 5: Testing-
 
-To test the smart contract, we will create a new `test` file in the test directory called `microlending.js`. Add the following code to the file:
+To test the Smart Contract, we will create a new `test` file in the test directory called `microlending.js`. Add the following code to the file:
 
 ```javascript
 const { expect } = require("chai");
@@ -543,7 +543,7 @@ describe("Microlending", function () {
 });
 ```
 
-This test file sets up the `Microlending` contract, creates three signers, and tests the deposit, requestLoan, and repayLoan functions.
+This test file sets up the `Microlending` contract, creates three signers, tests the `deposit`, `requestLoan` and `repayLoan` functions.
 
 To run the tests, run the following command in your terminal:
 
@@ -575,16 +575,16 @@ Microlending
 
 All tests should pass without any errors.
 
-Congratulations! You have now created a rudimentary microlending platform on the Celo blockchain. You can use this as a starting point for developing more complex financial applications using Celo.
+Congratulations! You have now created a rudimentary Microlending Platform on the Celo blockchain. You can use this as a starting point for developing more complex financial applications using Celo.
 
-Next steps could include developing more sophisticated risk assessment and credit scoring algorithms, integrating with off-chain data sources, and developing a user interface to interact with the smart contract.
+The next steps include developing more sophisticated risk assessment and credit scoring algorithms, integrating with off-chain data sources and developing a user interface to interact with the Smart Contract.
 
-## Conclusion
+## Conclusion:
 
-In conclusion, developing a Celo-based microlending platform can be an excellent strategy to promote financial inclusion and provide credit to those in greatest need. We can establish a transparent, safe, and efficient lending platform that benefits both lenders and borrowers by leveraging the power of smart contracts and the Celo blockchain.
+Therefore, developing a Celo-based microlending platform can be an excellent strategy to promote financial inclusion and provide credit to vulnerable sections. We can establish a transparent, safe and efficient lending platform that benefits both lenders and borrowers by leveraging the power of Smart Contracts and the Celo blockchain.
 
-We covered the fundamentals of developing a microlending platform on Celo in this lesson, including setting up a development environment, generating a smart contract, and testing our code. We also looked at the many functionalities of a microlending platform, such as seeking loans, repaying loans, depositing cash, and withdrawing funds.
+In this tutorial, we  have also covered the fundamentals of developing a microlending platform on Celo in this lesson, including setting up a development environment, generating a Smart Contract and testing our code. We also looked at the many functionalities of a microlending platform like seeking loans, repaying loans, depositing cash and withdrawing funds.
 
-You should now have a strong foundation for creating your own Celo-based microlending platform after following the instructions provided in this article. Of course, there's always more to learn and do better, but this tutorial ought to provide you a good place to start as you continue on your development path.
+You should now have a strong foundation for creating your own Celo-based microlending platform after following the instructions provided in this tutorial. Surely there's always more to learn and do better, but this tutorial ought to provide you a good place to start as you continue on your development path.
 
-When developing on any blockchain, keep in mind to always put security and best practices first, and don't be afraid to ask the Celo community for help and advice along the way. Wishing you well as you create your microlending platform!
+When developing on any blockchain, always keep in mind to put security and best practices first and don't be afraid to ask the Celo community for help and advice along the way. Wishing you well as you create your microlending platform!
